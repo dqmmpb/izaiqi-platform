@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.izaiqi.platform.core.dao.mapper.ext.SysUserExtMapper">
+  <resultMap id="BaseResultMap" type="com.izaiqi.platform.core.domain.model.SysUser">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="USER_ID" property="userId" jdbcType="BIGINT"/>
+    <result column="USER_NAME" property="userName" jdbcType="VARCHAR"/>
+    <result column="PASSWORD" property="password" jdbcType="VARCHAR"/>
+    <result column="SALT" property="salt" jdbcType="VARCHAR"/>
+    <result column="NAME" property="name" jdbcType="VARCHAR"/>
+    <result column="MOBILE" property="mobile" jdbcType="VARCHAR"/>
+    <result column="STATE" property="state" jdbcType="CHAR"/>
+    <result column="STATE_TIME" property="stateTime" jdbcType="TIMESTAMP"/>
+    <result column="IS_LOCKED" property="isLocked" jdbcType="CHAR"/>
+    <result column="PWD_EXP_TIME" property="pwdExpTime" jdbcType="TIMESTAMP"/>
+    <result column="USER_EFF_TIME" property="userEffTime" jdbcType="TIMESTAMP"/>
+    <result column="USER_EXP_TIME" property="userExpTime" jdbcType="TIMESTAMP"/>
+    <result column="FORCE_LOGIN" property="forceLogin" jdbcType="CHAR"/>
+    <result column="LOGIN_FAIL" property="loginFail" jdbcType="INTEGER"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <select id="checkUserName" resultType="java.lang.Boolean" parameterType="java.util.Map">
+    SELECT EXISTS(
+    SELECT USER_ID FROM SYS_USER
+    WHERE USER_NAME=#{userName}
+    <if test="userId != null">
+      USER_ID != #{userId}
+    </if>
+    )
+  </select>
+
+  <select id="getUsersByRoleId" resultMap="BaseResultMap" parameterType="java.lang.Long">
+    SELECT
+    A.USER_ID,
+    A.USER_NAME,
+    A.NAME,
+    A.MOBILE,
+    A.USER_EFF_TIME,
+    A.USER_EXP_TIME,
+    A.CREATE_TIME,
+    A.UPDATE_TIME,
+    A.STATE,
+    A.STATE_TIME,
+    A.IS_LOCKED,
+    A.PWD_EXP_TIME,
+    A.FORCE_LOGIN,
+    A.LOGIN_FAIL
+    FROM SYS_USER A, SYS_USER_ROLE B
+    WHERE A.USER_ID = B.USER_ID AND B.ROLE_ID=#{roleId}
+    ORDER BY A.USER_NAME
+  </select>
+</mapper>

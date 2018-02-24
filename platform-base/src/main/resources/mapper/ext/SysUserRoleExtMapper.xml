@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.izaiqi.platform.core.dao.mapper.ext.SysUserRoleExtMapper">
+  <resultMap id="BaseResultMap" type="com.izaiqi.platform.core.domain.model.SysUserRole">
+    <!--
+      WARNING - @mbg.generated
+    -->
+    <id column="ROLE_ID" property="roleId" jdbcType="BIGINT"/>
+    <id column="USER_ID" property="userId" jdbcType="BIGINT"/>
+    <result column="STATE" property="state" jdbcType="CHAR"/>
+    <result column="CREATE_TIME" property="createTime" jdbcType="TIMESTAMP"/>
+    <result column="UPDATE_TIME" property="updateTime" jdbcType="TIMESTAMP"/>
+  </resultMap>
+  <sql id="Base_Column_List">
+    ROLE_ID, USER_ID, STATE, CREATE_TIME, UPDATE_TIME
+  </sql>
+  <select id="checkRoleExist" resultType="java.lang.Boolean" parameterType="java.lang.Long">
+    SELECT EXISTS (
+    SELECT USER_ID, ROLE_ID FROM SYS_USER_ROLE
+    WHERE ROLE_ID=#{roleId}
+    )
+  </select>
+  <select id="checkUserRoleExist" resultType="java.lang.Boolean" parameterType="java.util.Map">
+    SELECT EXISTS (
+    SELECT USER_ID, ROLE_ID FROM SYS_USER_ROLE
+    WHERE USER_ID=#{userId} AND ROLE_ID=#{roleId}
+    )
+  </select>
+  <select id="queryUserRole" resultMap="BaseResultMap" parameterType="java.util.Map">
+    SELECT
+    <include refid="Base_Column_List"/>
+    FROM SYS_USER_ROLE
+    WHERE USER_ID = #{userId}
+    <if test="state != null">
+      AND STATE!=#{state}
+    </if>
+  </select>
+</mapper>
